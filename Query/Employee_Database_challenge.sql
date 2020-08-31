@@ -96,9 +96,9 @@ FROM retirement_titles
 ORDER BY emp_no, to_date DESC;
 
 
-10-- 
 
-11--
+
+
 ==A query is written and executed to create a Unique Titles 
 ==table that contains the employee 
 ==number, first and last name, and most recent title. (15 pt)
@@ -112,14 +112,14 @@ CREATE TABLE unique_titles (
 --12--Sort the Unique Titles table in ascending order by the employee number and 
 	--descending order by the last date (i.e. to_date) of the most recent title.
 	
-SELECT * FROM employees
-ORDER BY employee_no ASC;
-???DESC most recent title date
+--SELECT * FROM employees
+--ORDER BY employee_no ASC;
+--???DESC most recent title date
 	
 --13
 --14
 	
---??15Write another query in the Employee_Database_challenge.sql file 
+--15Write another query in the Employee_Database_challenge.sql file 
 --to retrieve the number 
 --of employees by their most recent job title who are about to retire.
 	
@@ -152,7 +152,7 @@ WHERE (birth_date BETWEEN '1952-01-01' AND '1955-12-31')
 AND (hire_date BETWEEN '1985-01-01' AND '1988-12-31');
 
 
-);
+
 CREATE TABLE dept_manager (
 dept_no VARCHAR(4) NOT NULL,
     emp_no INT NOT NULL,
@@ -162,12 +162,6 @@ FOREIGN KEY (emp_no) REFERENCES employees (emp_no),
 FOREIGN KEY (dept_no) REFERENCES departments (dept_no),
     PRIMARY KEY (emp_no, dept_no)
 );
-
-
-
-
-
-
 
 
 -- Number of employees retiring
@@ -190,17 +184,8 @@ SELECT * FROM retirement_info;
 
 
 
--- Number of employees retiring
-SELECT COUNT(first_name)
-FROM employees
-WHERE (birth_date BETWEEN '1952-01-01' AND '1955-12-31')
-AND (hire_date BETWEEN '1985-01-01' AND '1988-12-31');
 
-
--- Joining departments and dept_manager tables
-
-
--- Joining retirement_info and dept_emp tables
+-- ***Joining retirement_info and dept_emp tables
 SELECT retirement_info.emp_no,
     retirement_info.first_name,
 retirement_info.last_name,
@@ -209,8 +194,7 @@ retirement_info.last_name,
 
 
 
-
--- Joining departments and dept_manager tables
+-- ***Joining 
 SELECT departments.dept_name,
      dept_manager.emp_no,
      dept_manager.from_date,
@@ -220,18 +204,47 @@ INNER JOIN dept_manager
 ON departments.dept_no = dept_manager.dept_no;
 
 
--- Employee count by department number
-SELECT COUNT(ce.emp_no), de.dept_no
-FROM current_emp as ce
-LEFT JOIN dept_emp as de
-ON ce.emp_no = de.emp_no
-GROUP BY de.dept_no;
+DROP TABLE mentorship_eligibility CASCADE
 
--- Employee count by department number
-SELECT COUNT(ce.emp_no), de.dept_no
-FROM current_emp as ce
-LEFT JOIN dept_emp as de
-ON ce.emp_no = de.emp_no
+
+-- this worked--Joining employee and titles tables into new table called mentorship_eligibility
+SELECT DISTINCT
+	titles.emp_no,
+	employee.first_name,
+	employee.last_name,
+	employee.birth_date,
+	employee.hire_date,
+	titles.title,
+	titles.from_date,
+	titles.to_date
+INTO mentorship_eligibility		
+FROM employee
+INNER JOIN titles
+ON employee.emp_no = titles.emp_no
+WHERE (birth_date BETWEEN '1965-01-01' AND '1965-12-31')
+AND (hire_date> '1989-01-01')
+ORDER BY emp_no ASC	;
+
+
+-- check -- current employees with birthdays 1965
+SELECT COUNT(to_date)
+FROM mentorship_eligibility
+WHERE (birth_date BETWEEN '1965-01-01' AND '1965-12-31')
+AND (hire_date> '1989-01=01');
+
+--filter
+SELECT COUNT(to_date)
+FROM mentorship_eligibility
+WHERE (birth_date BETWEEN '1965-01-01' AND '1965-12-31');
+
+
+	
+
+
+
+
+
+
 
 
 
